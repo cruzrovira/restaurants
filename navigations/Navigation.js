@@ -40,8 +40,8 @@ const Navigation = () => {
       <tab.Navigator
         initialRouteName="restautants"
         tabBarOptions={{
-          inactiveTintColor: "#a17dc3",
-          activeTintColor: "#442484",
+          // inactiveTintColor: "#a17dc3",
+          activeTintColor: "#2089DC",
         }}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color }) => screnIcon(route, color),

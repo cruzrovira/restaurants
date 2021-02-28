@@ -2,7 +2,7 @@ import React from "react";
 
 import { Image, StyleSheet, Text, View, ScrollView } from "react-native";
 import { Divider } from "react-native-elements";
-
+import { useNavigation } from "@react-navigation/native";
 const Login = () => {
   return (
     <ScrollView>
@@ -21,11 +21,12 @@ const Login = () => {
 };
 
 function CreateAccount(arg) {
+  const navigate = useNavigation();
   return (
     <Text
       style={styles.reguister}
       onPress={() => {
-        console.log("click");
+        navigate.navigate("register");
       }}
     >
       Aún no tienes una cuenta?{" "}
@@ -53,7 +54,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginHorizontal: 20,
     alignSelf: "center",
-    cursor: "pointer",
   },
   btnRegister: {
     fontWeight: "bold",

@@ -10,3 +10,17 @@ export const isUserLogged = () => {
   });
   return isLogged;
 };
+
+export const registerUser = async (email, password) => {
+  const resut = { statusReponse: true, error: null };
+  try {
+    await auth.createUserWithEmailAndPassword(email, password);
+  } catch (error) {
+    resut.error = "Este correo ya ha sido reguistrado";
+  }
+  return resut;
+};
+
+export const closeSession = async () => {
+  await auth.signOut();
+};

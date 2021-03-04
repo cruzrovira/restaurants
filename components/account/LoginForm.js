@@ -1,33 +1,31 @@
 import React, { useState } from "react";
-import { size } from "lodash";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Icon, Input } from "react-native-elements";
-import { validateEmail } from "./../../utils/helpers";
 import { useNavigation } from "@react-navigation/native";
-import { registerUser } from "../../services/firebaseAction";
-import Loading from "../Loading";
+import Loading from "./../Loading";
+import { size } from "lodash";
+import { validateEmail } from "./../../utils/helpers";
 
-const RegisterForm = () => {
+const LoginForm = () => {
+  const [user, setUser] = useState({ email: "", password: "" });
   const [securePassword, setSecurePassword] = useState(true);
-  const [securePasswordConfirm, setSecurePasswordConfirm] = useState(true);
-  const [user, setUser] = useState({ email: "", password: "", confirm: "" });
+
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
-  const [errorConfirm, setErrorConfirm] = useState("");
   const [loadin, setloadin] = useState(false);
-  //validate data User
+
   const navigation = useNavigation();
 
-  const doRegisterUser = async () => {
+  const doLogin = () => {
     if (!validateData()) {
       return;
     }
     setloadin(true);
-    const result = await registerUser(user.email, user.password);
-    if (!result.statusReponse) {
-      setErrorEmail(result.error);
-      return;
-    }
+    // const result = await registerUser(user.email, user.password);
+    // if (!result.statusReponse) {
+    //   setErrorEmail(result.error);
+    //   return;
+    // }
     setloadin(false);
     navigation.navigate("account");
   };
@@ -36,7 +34,7 @@ const RegisterForm = () => {
     let isValid = true;
     setErrorEmail("");
     setErrorPassword("");
-    setErrorConfirm("");
+
     if (!validateEmail(user.email)) {
       setErrorEmail("Debes ingresar un email  valido");
       isValid = false;
@@ -47,24 +45,12 @@ const RegisterForm = () => {
       );
       isValid = false;
     }
-    if (size(user.confirm) < 6) {
-      setErrorConfirm(
-        "Debes ingresar una contraseña de almenos seis caracteres "
-      );
-      isValid = false;
-    }
-
-    if (user.password !== user.confirm) {
-      setErrorPassword("La contraseña y la confirmacion no son iguales");
-      setErrorConfirm("La contraseña y la confirmacion no son iguales");
-      isValid = false;
-    }
 
     return isValid;
   };
 
   return (
-    <View style={styles.form}>
+    <View style={styles.container}>
       <Input
         placeholder="Ingresa tu emial.."
         keyboardType="email-address"
@@ -93,52 +79,36 @@ const RegisterForm = () => {
             onPress={() => setSecurePassword(!securePassword)}
           />
         }
+      />
 
-        // password={true}
-      />
-      <Input
-        placeholder="Confrima la Contaseña"
-        secureTextEntry={securePasswordConfirm}
-        containerStyle={styles.input}
-        errorMessage={errorConfirm}
-        defaultValue={user.confirm}
-        onChangeText={(text) => {
-          setUser({ ...user, confirm: text });
-        }}
-        rightIcon={
-          <Icon
-            type="material-community"
-            name={securePasswordConfirm ? "eye-outline" : "eye-off-outline"}
-            color={"#CCC"}
-            onPress={() => setSecurePasswordConfirm(!securePasswordConfirm)}
-          />
-        }
-      />
       <Button
-        title="Registar Nuevo Usuario"
+        title="Iniciar Session"
         type="solid"
         containerStyle={styles.btnContainer}
         buttonStyle={styles.btn}
         onPress={() => {
-          doRegisterUser();
+          doLogin();
         }}
       />
-      <Loading isVisible={loadin} text="Creando Cuenta" />
+      <Loading isVisible={loadin} text="Iniciando Session..." />
     </View>
   );
 };
 
-export default RegisterForm;
+export default LoginForm;
 
 const styles = StyleSheet.create({
-  form: {
+  container: {
+    flex: 1,
     marginTop: 30,
+    alignItems: "center",
+    justifyContent: "center",
   },
   input: {
     width: "100%",
   },
   btnContainer: {
-    marginTop: 20,
+    marginTop: 10,
     width: "95%",
     alignSelf: "center",
   },

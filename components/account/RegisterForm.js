@@ -3,6 +3,9 @@ import { size } from "lodash";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Icon, Input } from "react-native-elements";
 import { validateEmail } from "./../../utils/helpers";
+import { useNavigation } from "@react-navigation/native";
+import { registerUser } from "../../services/firebaseAction";
+import Loading from "../Loading";
 
 const RegisterForm = () => {
   const [securePassword, setSecurePassword] = useState(true);
@@ -11,12 +14,22 @@ const RegisterForm = () => {
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
   const [errorConfirm, setErrorConfirm] = useState("");
+  const navigation = useNavigation();
+  const [loadin, setloadin] = useState(false);
   //validate data User
-  const registerUser = () => {
+
+  const doRegisterUser = async () => {
     if (!validateData()) {
       return;
     }
-    console.log("fuck yeaaa..!!");
+    setloadin(true);
+    const result = await registerUser(user.email, user.password);
+    if (!result.statusReponse) {
+      setErrorEmail(result.error);
+      return;
+    }
+    setloadin(false);
+    navigation.navigate("account");
   };
   const validateData = () => {
     let isValid = true;
@@ -106,9 +119,10 @@ const RegisterForm = () => {
         containerStyle={styles.btnContainer}
         buttonStyle={styles.btn}
         onPress={() => {
-          registerUser();
+          doRegisterUser();
         }}
       />
+      <Loading isVisible={loadin} text="Creando Cuenta" />
     </View>
   );
 };

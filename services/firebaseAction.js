@@ -19,10 +19,20 @@ export const registerUser = async (email, password) => {
   const resut = { statusReponse: true, error: null };
   try {
     await auth.createUserWithEmailAndPassword(email, password);
-    console.log(getCurrentUser());
   } catch (error) {
     resut.statusReponse = false;
     resut.error = "Este correo ya ha sido reguistrado";
+  }
+  return resut;
+};
+
+export const loginWithEmailAndPassword = async (email, password) => {
+  const resut = { statusReponse: true, error: null };
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (error) {
+    resut.statusReponse = false;
+    resut.error = "El usuario o contraseña invalida.";
   }
   return resut;
 };

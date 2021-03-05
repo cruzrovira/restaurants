@@ -12,7 +12,6 @@ const Account = () => {
   useFocusEffect(
     useCallback(() => {
       let user = getCurrentUser();
-      console.log(user);
       user ? setLogeed(true) : setLogeed(false);
     }, [])
   );

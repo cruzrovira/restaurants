@@ -3,8 +3,9 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button, Icon, Input } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import Loading from "./../Loading";
-import { size } from "lodash";
+import { isEmpty } from "lodash";
 import { validateEmail } from "./../../utils/helpers";
+import { loginWithEmailAndPassword } from "../../services/firebaseAction";
 
 const LoginForm = () => {
   const [user, setUser] = useState({ email: "", password: "" });
@@ -16,16 +17,17 @@ const LoginForm = () => {
 
   const navigation = useNavigation();
 
-  const doLogin = () => {
+  const doLogin = async () => {
     if (!validateData()) {
       return;
     }
     setloadin(true);
-    // const result = await registerUser(user.email, user.password);
-    // if (!result.statusReponse) {
-    //   setErrorEmail(result.error);
-    //   return;
-    // }
+    const result = await loginWithEmailAndPassword(user.email, user.password);
+    if (!result.statusReponse) {
+      setErrorEmail(result.error);
+      setErrorPassword(result.error);
+      return;
+    }
     setloadin(false);
     navigation.navigate("account");
   };
@@ -39,10 +41,8 @@ const LoginForm = () => {
       setErrorEmail("Debes ingresar un email  valido");
       isValid = false;
     }
-    if (size(user.password) < 6) {
-      setErrorPassword(
-        "Debes ingresar una contraseña de almenos seis caracteres "
-      );
+    if (isEmpty(user.password)) {
+      setErrorPassword("Debes ingresar una password ");
       isValid = false;
     }
 

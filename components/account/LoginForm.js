@@ -90,7 +90,7 @@ const LoginForm = () => {
           doLogin();
         }}
       />
-      <Loading isVisible={loadin} text="Iniciando Session..." />
+      {loadin && <Loading isVisible={loadin} text="Iniciando Session..." />}
     </View>
   );
 };
